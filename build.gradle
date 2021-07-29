@@ -1,0 +1,89 @@
+
+description = '<h3>Jtest demo project</h3><p>The project contains sample source code with various errors, and bad practice examples which can be detected by Jtest analysis.</p>'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = theGroup
+version = theVersion
+
+def jtestPluginPath = projectDir.absolutePath + '/../../integration/gradle/jtest.gradle'
+if(file(jtestPluginPath).exists()) {
+    apply from: jtestPluginPath
+} else {
+    logger.warn('The Jtest tasks cannot be executed from the command line. Please verify if the following file is available: \'../../integration/gradle/jtest.gradle\'')
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+compileJava.options.encoding = 'UTF-8'
+
+
+test{
+
+    // print short tests summary
+    afterSuite { desc, result ->
+        if (!desc.parent)
+            println("Test results: ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped")
+    }
+    useJUnitPlatform()
+
+    // ignore test failures for demo purposes
+    ignoreFailures = true
+
+    // AccountDynamicTest.class is a part of AccountDynamicSuite.class and should not be launched as a separated test
+    exclude '**/nbank/AccountDynamicTest.class'
+    exclude '**/*Test*$*.class'
+}
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+jar {
+    archiveName = theName + '.jar'
+}
+
+dependencies {
+    compile 'javax.servlet:servlet-api:2.4'
+    compile 'org.apiguardian:apiguardian-api:1.1.0'
+    compile 'org.javassist:javassist:3.27.0-GA'
+    compile 'net.bytebuddy:byte-buddy:1.10.9'
+    testCompile 'net.bytebuddy:byte-buddy-agent:1.10.9'
+    testCompile 'org.hamcrest:hamcrest:2.2'
+    
+    compile 'org.opentest4j:opentest4j:1.2.0'
+    testCompile 'org.objenesis:objenesis:3.1'
+    testCompile 'junit:junit:4.13.1'
+
+    testCompile     'org.junit.jupiter:junit-jupiter:5.7.0'
+    testCompile     'org.junit.jupiter:junit-jupiter-migrationsupport:5.7.0'
+    testCompile     'org.junit.vintage:junit-vintage-engine:5.7.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher:1.7.0'
+
+    testCompile 'pl.pragmatists:JUnitParams:1.1.1'
+    testCompile 'org.mockito:mockito-core:3.3.3'
+    testCompile 'org.mockito:mockito-junit-jupiter:3.3.3'
+
+    compile 'org.powermock:powermock-api-support:2.0.9'
+    compile 'org.powermock:powermock-core:2.0.9'
+    testCompile 'org.powermock:powermock-api-mockito2:2.0.9'
+    testCompile 'org.powermock:powermock-module-junit4:2.0.9'
+    testCompile 'org.powermock:powermock-module-junit4-common:2.0.9'
+    testCompile 'org.powermock:powermock-reflect:2.0.9'
+}
+
+processResources {
+    from ('src/test/java') {
+        include '**/*.csv'
+    }
+}
+
