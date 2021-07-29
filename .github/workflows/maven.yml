@@ -36,22 +36,22 @@ jobs:
           echo test, and deploy your project.
           
       - name: Run Jtest
-        uses: parasoft/run-jtest-action@1.0.0
+        uses: parasoft/run-jtest-action@2.0.0
         with:
           installDir: 'D:\parasoft\jtest_2021.1'
         
       - name: Run Jtest
-        uses: parasoft/run-jtest-action@1.0.0
+        uses: parasoft/run-jtest-action@2.0.0
         with:
           input: 'build/demo.data.json'
           
       - name: Run Jtest
-        uses: parasoft/run-jtest-action@1.0.0
+        uses: parasoft/run-jtest-action@2.0.0
         with:
           testConfig: 'builtin://Recommended Rules'
           
       - name: Run Jtest
-        uses: parasoft/run-jtest-action@1.0.0
+        uses: parasoft/run-jtest-action@2.0.0
         with:
            reportFormat: xml,html,custom
            additionalParams: '-property report.custom.extension=sarif -property report.custom.xsl.file=${PARASOFT_SARIF_XSL}'
